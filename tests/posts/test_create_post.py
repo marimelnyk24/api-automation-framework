@@ -3,6 +3,7 @@ from pytest import assume
 from data.test_data import CREATE_POST_PAYLOAD
 from endpoints.posts import PostsAPI
 from utils.assertions import Assert
+from utils.schemas import PostSchema
 
 
 def test_create_post(posts_api: PostsAPI):
@@ -12,6 +13,7 @@ def test_create_post(posts_api: PostsAPI):
     response_json = response.json()
 
     Assert.status_code(response, 201)
+    PostSchema.validate(response_json)
 
     with assume:
         Assert.equals(
@@ -26,6 +28,3 @@ def test_create_post(posts_api: PostsAPI):
             payload["body"],
             "body"
         )
-
-    with assume:
-        Assert.has_key(response_json, "id")
