@@ -5,6 +5,8 @@ import requests
 from requests import Response, Session
 from loguru import logger
 
+from utils.api_response import APIResponse
+
 
 class APIClient:
 
@@ -28,7 +30,7 @@ class APIClient:
         method: str,
         endpoint: str,
         **kwargs: Any
-    ) -> Response:
+    ) -> APIResponse:
 
         url = urljoin(self.base_url, endpoint)
 
@@ -72,7 +74,7 @@ class APIClient:
                 f"Error response body: {response.text}"
             )
 
-        return response
+        return APIResponse(response)
 
     def get(
         self,

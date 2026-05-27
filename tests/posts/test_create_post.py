@@ -10,21 +10,22 @@ def test_create_post(posts_api: PostsAPI):
     payload = CREATE_POST_PAYLOAD
 
     response = posts_api.create_post(payload)
-    response_json = response.json()
 
-    Assert.status_code(response, 201)
-    PostSchema.validate(response_json)
+    response.assert_status_code(201)
+    response.assert_schema(PostSchema)
+
+    data = response.json
 
     with assume:
         Assert.equals(
-            response_json["title"],
+            data["title"],
             payload["title"],
             "title"
         )
 
     with assume:
         Assert.equals(
-            response_json["body"],
+            data["body"],
             payload["body"],
             "body"
         )
