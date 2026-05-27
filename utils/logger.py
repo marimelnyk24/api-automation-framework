@@ -19,16 +19,25 @@ def setup_logger():
 
     log_file = logs_dir / f"test_run_{timestamp}.log"
 
+    log_format = (
+        "{time} | {level} | "
+        "test={extra[test]} | "
+        "test_module={extra[test_module]} | "
+        "module={module} | "
+        "function={function} | "
+        "{message}"
+    )
+
     logger.add(
         sys.stdout,
-        format="{time} | {level} | {module} | {function} | {message}",
+        format=log_format,
         level="INFO",
         colorize=True
     )
 
     logger.add(
         str(log_file),
-        format="{time} | {level} | {module} | {function} | {message}",
+        format=log_format,
         level="DEBUG",
         rotation="10 MB",
         retention="7 days",

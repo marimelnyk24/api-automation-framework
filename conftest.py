@@ -10,21 +10,17 @@ from utils.logger import setup_logger
 def logger_setup():
     setup_logger()
 
-
-@pytest.fixture(scope="module", autouse=True)
-def log_module(request):
-    module_name = request.node.module.__name__
-    logger.info(f"START MODULE: {module_name}")
-    yield
-    logger.info(f"END MODULE: {module_name}")
-
-
 @pytest.fixture(autouse=True)
-def log_test(request):
+def log_context(request):
     test_name = request.node.name
-    logger.info(f"START TEST: {test_name}")
-    yield
-    logger.info(f"END TEST: {test_name}")
+
+    with logger.contextualize(
+        test=test_name,
+        test_module=request.node.module.__name__
+    ):
+        logger.info(f"START TEST: {test_name}")
+        yield
+        logger.info(f"END TEST: {test_name}")
 
 
 @pytest.fixture
