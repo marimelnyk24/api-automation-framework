@@ -5,6 +5,7 @@ class APIResponse:
     def __init__(self, response):
         self._response = response
         self._json = None
+        self._is_list = False
 
     @property
     def status_code(self):
@@ -20,39 +21,56 @@ class APIResponse:
     def text(self):
         return self._response.text
 
+    # -------------------------
+    # STATUS
+    # -------------------------
     def assert_status_code(self, expected: int):
         assert self.status_code == expected, (
             f"Expected {expected}, got {self.status_code}"
         )
         return self
 
-    def assert_schema(self, schema_class):
+    # -------------------------
+    # TYPE EXPECTATION
+    # -------------------------
+    def expect_list(self):
+        assert isinstance(self.json, list), (
+            f"Expected list, got {type(self.json).__name__}"
+        )
+        self._is_list = True
+        return self
+
+    def expect_object(self):
+        assert isinstance(self.json, dict), (
+            f"Expected dict, got {type(self.json).__name__}"
+        )
+        self._is_list = False
+        return self
+
+    # -------------------------
+    # COMMON CHECKS
+    # -------------------------
+    def not_empty(self):
+        assert self.json, "Response is empty"
+        return self
+
+    # -------------------------
+    # SCHEMA VALIDATION
+    # -------------------------
+    def schema(self, schema_class):
         logger.info(f"Validating schema: {schema_class.__name__}")
 
         schema_class.validate(self.json)
         return self
 
-    def assert_is_list(self):
-        assert isinstance(self.json, list), (
-            f"Expected list, got {type(self.json).__name__}"
-        )
-        return self
-
-    def assert_not_empty(self):
-        assert self.json, "Response list is empty"
-        return self
-
-    def assert_each_schema(self, schema_class):
-        self.assert_is_list()
-        self.assert_not_empty()
-
-        data = self.json
+    def each_schema(self, schema_class, limit=None):
+        items = self.json if limit is None else self.json[:limit]
 
         logger.info(
-            f"Validating schema for {len(data)} items using {schema_class.__name__}"
+            f"Validating schema for {len(items)} items using {schema_class.__name__}"
         )
 
-        for index, item in enumerate(data):
+        for index, item in enumerate(items):
             try:
                 schema_class.validate(item)
             except AssertionError as e:

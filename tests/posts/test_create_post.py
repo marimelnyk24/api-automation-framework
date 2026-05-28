@@ -11,8 +11,9 @@ def test_create_post(posts_api: PostsAPI):
 
     response = posts_api.create_post(payload)
 
-    response.assert_status_code(201)
-    response.assert_schema(PostSchema)
+    response.assert_status_code(201) \
+            .expect_object() \
+            .schema(PostSchema)
 
     data = response.json
 
