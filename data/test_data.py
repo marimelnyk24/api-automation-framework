@@ -1,5 +1,3 @@
-CREATE_POST_PAYLOAD = {
-    "title": "Test title",
-    "body": "Test body",
-    "userId": 1
-}
+INVALID_POST_ID = 9999
+INVALID_POST_ID_STR = "abc"
+INVALID_USER_ID = 9999

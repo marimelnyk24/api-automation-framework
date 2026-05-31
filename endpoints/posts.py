@@ -14,7 +14,7 @@ class PostsAPI:
         logger.info("Fetching all posts")
         return self.client.get(self.POSTS)
 
-    def get_post(self, post_id: int):
+    def get_post(self, post_id):
         logger.info(f"Fetching post with ID {post_id}")
         return self.client.get(f"{self.POSTS}/{post_id}")
 
@@ -27,3 +27,16 @@ class PostsAPI:
             self.POSTS,
             json=payload
         )
+    
+    def filter_posts(self, params: dict = None):
+        logger.info(
+            f"Filtering posts with params: {params}"
+        )
+        return self.client.get(
+            self.POSTS,
+            params=params
+        )
+    
+    def get_post_comments(self, post_id: int):
+        logger.info(f"Fetching comments for post ID {post_id}")
+        return self.client.get(f"{self.POSTS}/{post_id}/comments")

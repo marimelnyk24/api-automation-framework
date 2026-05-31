@@ -53,6 +53,13 @@ class APIResponse:
     def not_empty(self):
         assert self.json, "Response is empty"
         return self
+    
+    def expect_list_length(self, expected_length: int):
+        actual_length = len(self.json)
+        assert actual_length == expected_length, (
+            f"Expected list length {expected_length}, got {actual_length}"
+        )
+        return self
 
     # -------------------------
     # SCHEMA VALIDATION
