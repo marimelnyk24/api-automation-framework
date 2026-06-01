@@ -18,7 +18,7 @@ def test_create_post(posts_api: PostsAPI):
             .expect_object() \
             .schema(PostSchema)
 
-    res_post = Post(**response.json)
+    res_post = response.to_model(Post)
 
     with assume:
         Assert.equals(
@@ -50,7 +50,7 @@ def test_create_post_title_only(posts_api: PostsAPI):
 
     response.assert_status_code(201).expect_object()
 
-    res_post = Post(**response.json)
+    res_post = response.to_model(Post)
  
     with assume:
         Assert.equals(res_post.title, post.title, "title")

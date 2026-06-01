@@ -1,6 +1,7 @@
 import pytest
 from pytest import assume
 
+from data.models.comment import Comment
 from data.models.post import Post
 from data.test_data import INVALID_POST_ID, INVALID_POST_ID_STR, INVALID_USER_ID
 from utils.assertions import Assert
@@ -23,7 +24,7 @@ def test_get_single_post(posts_api):
             .expect_object() \
             .schema(PostSchema)
 
-    post = Post(**response.json)
+    post = response.to_model(Post)
 
     with assume:
         Assert.equals(
@@ -42,7 +43,7 @@ def test_get_post_boundary_ids(posts_api, post_id):
             .expect_object() \
             .schema(PostSchema)
     
-    post = Post(**response.json)
+    post = response.to_model(Post)
  
     with assume:
         Assert.equals(post.id, post_id, "id")
@@ -56,9 +57,9 @@ def test_filter_posts_by_user_id(posts_api):
             .expect_list() \
             .not_empty()
     
+    posts = response.to_models(Post)
  
-    for item in response.json:
-        post = Post(**item)
+    for post in posts:
         with assume:
             Assert.equals(post.userId, 1, "userId")
 
@@ -70,10 +71,12 @@ def test_get_post_comments(posts_api):
     response.assert_status_code(200) \
             .expect_list() \
             .not_empty()
+    
+    comments = response.to_models(Comment)
  
-    for comment in response.json:
+    for comment in comments:
         with assume:
-            Assert.equals(comment["postId"], 1, "postId")
+            Assert.equals(comment.postId, 1, "postId")
 
 
 def test_get_non_existent_post_returns_404(posts_api):
