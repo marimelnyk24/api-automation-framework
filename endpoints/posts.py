@@ -14,7 +14,7 @@ class PostsAPI:
         logger.info("Fetching all posts")
         return self.client.get(self.POSTS)
 
-    def get_post(self, post_id):
+    def get_post(self, post_id: int | str):
         logger.info(f"Fetching post with ID {post_id}")
         return self.client.get(f"{self.POSTS}/{post_id}")
 
@@ -37,6 +37,6 @@ class PostsAPI:
             params=params
         )
     
-    def get_post_comments(self, post_id: int):
+    def get_post_comments(self, post_id: int | str):
         logger.info(f"Fetching comments for post ID {post_id}")
         return self.client.get(f"{self.POSTS}/{post_id}/comments")
