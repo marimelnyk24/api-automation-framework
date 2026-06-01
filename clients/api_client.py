@@ -7,7 +7,8 @@ from requests.adapters import HTTPAdapter
 from loguru import logger
 from urllib3.util.retry import Retry
 
-from utils.api_response import APIResponse
+from core.api_response import APIResponse
+from core.response import Response
 
 
 class APIClient:
@@ -60,7 +61,7 @@ class APIClient:
         method: str,
         endpoint: str,
         **kwargs: Any
-    ) -> APIResponse:
+    ) -> Response:
 
         url = self._build_url(endpoint)
 
@@ -105,13 +106,13 @@ class APIClient:
                 f"Error response body: {response.text}"
             )
 
-        return APIResponse(response)
+        return Response(APIResponse(response))
 
     def get(
         self,
         endpoint: str,
         **kwargs: Any
-    ) -> APIResponse:
+    ) -> Response:
 
         return self._request(
             "GET",
@@ -123,7 +124,7 @@ class APIClient:
         self,
         endpoint: str,
         **kwargs: Any
-    ) -> APIResponse:
+    ) -> Response:
 
         return self._request(
             "POST",
@@ -135,7 +136,7 @@ class APIClient:
         self,
         endpoint: str,
         **kwargs: Any
-    ) -> APIResponse:
+    ) -> Response:
 
         return self._request(
             "PUT",
@@ -147,7 +148,7 @@ class APIClient:
         self,
         endpoint: str,
         **kwargs: Any
-    ) -> APIResponse:
+    ) -> Response:
 
         return self._request(
             "DELETE",
