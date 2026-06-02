@@ -8,7 +8,6 @@ A lightweight API automation framework built with Python + pytest.
 - Python 3.9+
 - pytest
 - requests
-- pytest-assume
 
 ---
 

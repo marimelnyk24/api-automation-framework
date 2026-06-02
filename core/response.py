@@ -1,6 +1,6 @@
 from core.response_schema import ResponseSchema
-from core.api_response import APIResponse
 from core.response_assertions import ResponseAssertions
+
 
 class Response:
     def __init__(self, api_response):

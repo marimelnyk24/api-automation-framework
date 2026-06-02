@@ -1,15 +1,14 @@
-from pytest import assume
-
 from dataclasses import asdict
 
 from data.factories.post_factory import PostFactory
 from data.models.post import Post
 from endpoints.posts import PostsAPI
-from utils.assertions import Assert
+from utils.soft_assert import SoftAssert
 from utils.schemas import PostSchema
 
 
 def test_create_post(posts_api: PostsAPI):
+    soft = SoftAssert()
     post = PostFactory.create()
 
     response = posts_api.create_post(asdict(post))
@@ -20,40 +19,27 @@ def test_create_post(posts_api: PostsAPI):
 
     res_post = response.to_model(Post)
 
-    with assume:
-        Assert.equals(
-            res_post.title,
-            post.title,
-            "title"
-        )
-
-    with assume:
-        Assert.equals(
-            res_post.body,
-            post.body,
-            "body"
-        )
-    
-    with assume:
-        Assert.equals(
-            res_post.userId,
-            post.userId,
-            "userId"
-        )
+    soft \
+        .equals(res_post.title, post.title, "title") \
+        .equals(res_post.body, post.body, "body") \
+        .equals(res_post.userId, post.userId, "userId") \
+        .assert_all()
 
 
 def test_create_post_title_only(posts_api: PostsAPI):
     """Sending only a title should still return 201 (fake API behavior)."""
+    soft = SoftAssert()
     post = PostFactory.create(title="Test Title")
 
     response = posts_api.create_post(asdict(post))
 
-    response.assert_status(201).as_object()
+    response.assert_status(201).as_object().validate(PostSchema)
 
     res_post = response.to_model(Post)
  
-    with assume:
-        Assert.equals(res_post.title, post.title, "title")
+    soft \
+        .equals(res_post.title, post.title, "title") \
+        .assert_all()
 
 
 def test_create_post_with_extra_fields(posts_api: PostsAPI):
@@ -63,7 +49,7 @@ def test_create_post_with_extra_fields(posts_api: PostsAPI):
  
     response = posts_api.create_post(payload)
  
-    response.assert_status(201).as_object()
+    response.assert_status(201).as_object().validate(PostSchema)
 
 
 def test_create_post_empty_body(posts_api: PostsAPI):

@@ -1,5 +1,4 @@
 loguru
 pytest
-pytest-assume
 requests
 faker
