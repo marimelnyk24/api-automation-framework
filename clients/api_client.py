@@ -143,6 +143,17 @@ class APIClient:
             endpoint,
             **kwargs
         )
+    
+    def patch(
+        self,
+        endpoint: str,
+        **kwargs: Any
+    ) -> Response:
+        return self._request(
+            "PATCH",
+            endpoint,
+            **kwargs
+        )
 
     def delete(
         self,

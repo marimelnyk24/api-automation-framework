@@ -29,6 +29,15 @@ class PostsAPI:
             json=payload
         )
     
+    def update_post(self, post_id: int, payload: dict) -> Response:
+        return self.client.put(f"{self.POSTS}/{post_id}", json=payload)
+    
+    def patch_post(self, post_id: int, payload: dict) -> Response:
+        return self.client.patch(f"{self.POSTS}/{post_id}", json=payload)
+
+    def delete_post(self, post_id: int) -> Response:
+        return self.client.delete(f"{self.POSTS}/{post_id}")
+    
     def filter_posts(self, params: dict = None) -> Response:
         logger.info(
             f"Filtering posts with params: {params}"

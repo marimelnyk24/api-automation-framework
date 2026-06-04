@@ -24,12 +24,49 @@ class APIResponse:
     @property
     def text(self):
         return self._response.text
+    
+    def _map_item(
+        self,
+        item: dict,
+        model_class: Type[T],
+        allow_extra_fields: bool = True
+    ) -> T:
+        model_fields = model_class.__dataclass_fields__.keys()
 
-    def to_model(self, model_class: Type[T]) -> T:
-        return model_class(**self.json)
+        if allow_extra_fields:
+            item = {
+                k: v
+                for k, v in item.items()
+                if k in model_fields
+            }
+        else:
+            extra = set(item.keys()) - set(model_fields)
+            if extra:
+                raise AssertionError(f"Unexpected fields: {extra}")
 
-    def to_models(self, model_class: Type[T]) -> list[T]:
+        return model_class(**item)
+
+    def to_model(
+        self,
+        model_class: Type[T],
+        allow_extra_fields: bool = True
+    ) -> T:
+        return self._map_item(
+            self.json,
+            model_class,
+            allow_extra_fields
+        )
+
+    def to_models(
+        self,
+        model_class: Type[T],
+        allow_extra_fields: bool = True
+    ) -> list[T]:
         return [
-            model_class(**item)
+            self._map_item(
+                item,
+                model_class,
+                allow_extra_fields
+            )
             for item in self.json
         ]
