@@ -1,3 +1,5 @@
+from dataclasses import is_dataclass
+
 from loguru import logger
 
 from typing import Type, TypeVar
@@ -31,20 +33,34 @@ class APIResponse:
         model_class: Type[T],
         allow_extra_fields: bool = True
     ) -> T:
-        model_fields = model_class.__dataclass_fields__.keys()
 
-        if allow_extra_fields:
-            item = {
-                k: v
-                for k, v in item.items()
-                if k in model_fields
-            }
-        else:
-            extra = set(item.keys()) - set(model_fields)
+        model_fields = model_class.__dataclass_fields__
+
+        data = {}
+
+        for field_name, field_def in model_fields.items():
+
+            if field_name not in item:
+                continue
+
+            value = item[field_name]
+            field_type = field_def.type
+
+            if is_dataclass(field_type) and isinstance(value, dict):
+                data[field_name] = self._map_item(
+                    value,
+                    field_type,
+                    allow_extra_fields
+                )
+            else:
+                data[field_name] = value
+
+        if not allow_extra_fields:
+            extra = set(item.keys()) - set(model_fields.keys())
             if extra:
                 raise AssertionError(f"Unexpected fields: {extra}")
 
-        return model_class(**item)
+        return model_class(**data)
 
     def to_model(
         self,

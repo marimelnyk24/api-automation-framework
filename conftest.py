@@ -3,6 +3,7 @@ from loguru import logger
 
 from clients.api_client import APIClient
 from endpoints.posts import PostsAPI
+from endpoints.users import UsersAPI
 from config.settings import BASE_URL
 from utils.logger import setup_logger
 
@@ -24,6 +25,15 @@ def log_context(request):
 
 
 @pytest.fixture
-def posts_api():
-    client = APIClient(BASE_URL)
-    return PostsAPI(client)
+def api_client():
+    return APIClient(BASE_URL)
+
+
+@pytest.fixture
+def posts_api(api_client):
+    return PostsAPI(api_client)
+
+
+@pytest.fixture
+def users_api(api_client):
+    return UsersAPI(api_client)

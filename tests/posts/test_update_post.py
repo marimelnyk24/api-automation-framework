@@ -1,5 +1,5 @@
 from data.models.post import Post
-from utils.schemas import PostSchema
+from utils.schemas.post_schema import PostSchema
 from utils.soft_assert import SoftAssert
 
 

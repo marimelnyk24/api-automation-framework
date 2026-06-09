@@ -4,7 +4,7 @@ from data.models.comment import Comment
 from data.models.post import Post
 from data.test_data import INVALID_POST_ID, INVALID_POST_ID_STR, INVALID_USER_ID
 from utils.soft_assert import SoftAssert
-from utils.schemas import PostSchema
+from utils.schemas.post_schema import PostSchema
 
 
 def test_get_posts(posts_api):

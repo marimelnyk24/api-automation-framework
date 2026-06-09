@@ -4,7 +4,7 @@ from data.factories.post_factory import PostFactory
 from data.models.post import Post
 from endpoints.posts import PostsAPI
 from utils.soft_assert import SoftAssert
-from utils.schemas import PostSchema
+from utils.schemas.post_schema import PostSchema
 
 
 def test_create_post(posts_api: PostsAPI):
