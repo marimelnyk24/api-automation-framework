@@ -1,4 +1,5 @@
 loguru
 pytest
+pytest-html
 requests
 faker

@@ -37,7 +37,7 @@ class APIClient:
             status=max_retries,
             backoff_factor=backoff_factor,
             status_forcelist=(429, 500, 502, 503, 504),
-            allowed_methods=frozenset({"GET", "POST", "PUT", "DELETE"}),
+            allowed_methods=frozenset({"GET", "PUT", "PATCH", "DELETE"}),
             raise_on_status=False
         )
 
