@@ -8,6 +8,7 @@ from loguru import logger
 from urllib3.util.retry import Retry
 
 from core.api_response import APIResponse
+from core.request_context import set_last_response
 from core.response import Response
 
 
@@ -106,7 +107,11 @@ class APIClient:
                 f"Error response body: {response.text}"
             )
 
-        return Response(APIResponse(response))
+        wrapped_response = Response(APIResponse(response))
+
+        set_last_response(wrapped_response)
+
+        return wrapped_response
 
     def get(
         self,

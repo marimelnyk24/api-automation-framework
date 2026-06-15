@@ -63,7 +63,6 @@ class Response:
         self._schema.validate(schema_class, limit)
         return self
     
-
     # -------------------
     # MODEL CONVERSION
     # -------------------
@@ -72,3 +71,22 @@ class Response:
 
     def to_models(self, model_class):
         return self._response.to_models(model_class)
+    
+    # -------------------
+    # REQUEST INFO
+    # -------------------
+    @property
+    def request_method(self):
+        return self._response.request_method
+
+    @property
+    def request_url(self):
+        return self._response.request_url
+
+    @property
+    def request_headers(self):
+        return self._response.request_headers
+
+    @property
+    def request_body(self):
+        return self._response.request_body

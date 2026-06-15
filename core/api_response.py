@@ -13,6 +13,10 @@ class APIResponse:
         self._response = response
         self._json = None
 
+    # -------------------
+    # RESPONSE
+    # -------------------
+
     @property
     def status_code(self):
         return self._response.status_code
@@ -26,6 +30,30 @@ class APIResponse:
     @property
     def text(self):
         return self._response.text
+    
+    # -------------------
+    # REQUEST
+    # -------------------
+
+    @property
+    def request_method(self):
+        return self._response.request.method
+
+    @property
+    def request_url(self):
+        return self._response.request.url
+
+    @property
+    def request_headers(self):
+        return dict(self._response.request.headers)
+
+    @property
+    def request_body(self):
+        return self._response.request.body
+    
+    # -------------------
+    # MODEL MAPPING
+    # -------------------
     
     def _map_item(
         self,
